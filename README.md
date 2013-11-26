@@ -1,4 +1,3 @@
-
 Build monitor without monitor
 =============================
 
@@ -12,7 +11,8 @@ Why?
 
 schematic diagram in  circuit.fzz use [Fritz](http://fritzing.org/download/) to view
 
-model buildMonitor.stl 
+model in buildMonitor.stl:
+<br>
 ![stl model](https://raw.github.com/dileepbapat/build-monitor-without-monitor/master/model.png)
 
 
