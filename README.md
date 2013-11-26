@@ -13,5 +13,6 @@ Why?
 schematic diagram in  circuit.fzz use [Fritz](http://fritzing.org/download/) to view
 
 model buildMonitor.stl 
+![stl model](https://raw.github.com/dileepbapat/build-monitor-without-monitor/master/model.png)
 
 
