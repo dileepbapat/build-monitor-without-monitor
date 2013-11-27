@@ -3,7 +3,7 @@ import RPi.GPIO as GPIO
 
 host = "184.72.235.230"
 port = "8080"
-job_name = "develop-Datawinners"
+jobs = ["develop mangrove","develop-Datawinners", "develop-Datawinners-Smoke_Test", "develop-Datawinners_functional_test"]
 
 RED_PIN = 24
 GREEN_PIN = 26
@@ -12,22 +12,25 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setup(GREEN_PIN, GPIO.OUT)
 GPIO.setup(RED_PIN, GPIO.OUT)
 
+def get_result(job_name):
+	resp = requests.get('http://%s:%s/job/%s/lastBuild/api/json'%(host, port, job_name))
+	json = resp.json if isinstance(resp.json, dict) else resp.json()  #older requests version had json as property
+	return json.get('result')	
 
-resp = requests.get('http://%s:%s/job/%s/lastBuild/api/json'%(host, port, job_name))
-status = resp.json().get('result')	
-
-def set_green():
-	print "green"
-	GPIO.output(GREEN_PIN, GPIO.HIGH)
-	GPIO.output(RED_PIN, GPIO.LOW)
+def set_status(r,g):
+	GPIO.output(RED_PIN, r)
+	GPIO.output(GREEN_PIN, g)
 	
-def set_red():
-	print "red"
-	GPIO.output(GREEN_PIN, GPIO.LOW)
-	GPIO.output(RED_PIN, GPIO.HIGH)
+result = [get_result(job_name) for job_name in jobs]
 
-if  status == "SUCCESS": 
-	set_green()
-elif status == "FAILURE":
-    set_red()
+if "FAILURE" in result:
+	set_status(1,0)
+elif None in result:
+	pass
+elif set(result) == set(["SUCCESS"]):
+	set_status(0,1)
+else: 
+	set_status(0,0)
+	
+
 
